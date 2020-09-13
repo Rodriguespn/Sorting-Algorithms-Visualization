@@ -1,0 +1,58 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+.canvas {
+    margin-top: 10vh;
+}
+
+h1 {
+    text-align: center;
+    font-size: 36px;
+}
+
+nav {
+    padding: 40px 0;
+}
+
+nav > ul{
+    align-items: center;
+    text-align: center;
+}
+
+nav > ul > li {
+    display: inline-block;
+    padding: 10px;
+    background-color: #e7e7e7;
+}
+
+nav > ul > li:hover {
+    background-color: #d4d4d4;
+    cursor: pointer;
+}
+
+.data-container {
+    position: absolute;
+    margin-left: 5vw;
+    width: 90vw;
+    height: 70vh;
+    border: 1px solid #757575;
+}
+
+.block {
+    width: 28px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background-color: #3aafff;
+    transition: 0.2s all ease;
+}
+
+.block__id {
+    position: absolute;
+    top: -24px;
+    width: 100%;
+    text-align: center;
+}
