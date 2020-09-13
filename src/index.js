@@ -1,5 +1,7 @@
 const container = document.querySelector(".data-container");
 
+var active = false;
+
 function generateBlocks(num = 30) {
     num = container.clientWidth / 30 - 1;
     if (num && typeof num !== "number") {
@@ -45,6 +47,10 @@ function swap(el1, el2) {
 }
 
 async function bubbleSort(delay = 70) {
+    const initCoulour = "#13CE66";
+    const selectedCoulor = "#d849ff";
+    const doneCoulor = "#3aafff";
+
     if (delay && typeof delay !== "number") {
         alert("sort: First argument must be a typeof Number");
         return;
@@ -58,8 +64,8 @@ async function bubbleSort(delay = 70) {
                 }, delay)
             );
 
-            blocks[j].style.backgroundColor = "#d849ff";
-            blocks[j + 1].style.backgroundColor = "#D849FF";
+            blocks[j].style.backgroundColor = selectedCoulor;
+            blocks[j + 1].style.backgroundColor = selectedCoulor;
 
             const value1 = Number(blocks[j].childNodes[0].innerHTML);
             const value2 = Number(blocks[j + 1].childNodes[0].innerHTML);
@@ -69,13 +75,25 @@ async function bubbleSort(delay = 70) {
                 blocks = document.querySelectorAll(".block");
             }
 
-            blocks[j].style.backgroundColor = "#3aafff";
-            blocks[j + 1].style.backgroundColor = "#3aafff";
+            blocks[j].style.backgroundColor = doneCoulor;
+            blocks[j + 1].style.backgroundColor = doneCoulor;
         }
 
-        blocks[blocks.length - i - 1].style.backgroundColor = "#13CE66";
+        blocks[blocks.length - i - 1].style.backgroundColor = initCoulour;
+    }
+    blocks[0].style.backgroundColor = doneCoulor;
+}
+
+function sort() {
+    if (!active) {
+        bubbleSort();
+        active = true;
     }
 }
 
+function reset() {
+    generateBlocks();
+    active = false;
+}
+
 generateBlocks();
-bubbleSort();
