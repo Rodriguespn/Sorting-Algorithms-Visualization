@@ -98,3 +98,8 @@ button {
     margin-top: 20px;
     text-align: center;
 }
+
+.source-link > a > img {
+    width: 15px;
+    padding-right: 5px;
+}
