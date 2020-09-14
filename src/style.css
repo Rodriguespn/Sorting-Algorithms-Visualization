@@ -8,6 +8,11 @@ html {
     height: 100%;
 }
 
+body {
+    height: 100%;
+    background-color: #e7e7e7;
+}
+
 .canvas {
     margin-top: 10vh;
 }
@@ -30,7 +35,7 @@ nav > ul{
 nav > ul > li {
     display: inline-block;
     padding: 10px;
-    background-color: #e7e7e7;
+    background-color: #cac7c7;
 }
 
 nav > ul > li:hover {
@@ -44,12 +49,17 @@ button {
     border-radius: 10%;
 }
 
+.algorithm-header {
+    margin: 15px 0;
+}
+
 .data-container {
     position: relative;
     margin-left: 5vw;
     width: 90vw;
     height: 55vh;
     border: 1px solid #757575;
+    background-color: #d4d4d4;
 }
 
 .block {
