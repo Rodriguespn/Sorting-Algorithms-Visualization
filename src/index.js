@@ -2,7 +2,8 @@
 const algorithms = {
     BUBBLE: 1,
     SELECTION: 2,
-    INSERTION: 3
+    INSERTION: 3,
+    QUICK: 4
 }
     
 const canvas = document.querySelector(".data-container");
@@ -13,6 +14,11 @@ const delay = 70;
 const initColour = "#3aafff";
 const selectedColour = "#d849ff";
 const doneColour = "#13CE66";
+const pivotColour = "#ff3a4d";
+
+function getValue(htmlElement) {
+    return Number(htmlElement.childNodes[0].innerHTML);
+}
 
 // Clears the blocks from the canvas
 function clearCanvas() {
@@ -58,12 +64,19 @@ function changeAlgorithm(code) {
             case algorithms.BUBBLE:
                 header.innerText = "Bubble Sort";
                 break;
+
             case algorithms.SELECTION:
                 header.innerText = "Selection Sort";
                 break;
+
             case algorithms.INSERTION:
                 header.innerText = "Insertion Sort";
                 break;
+
+            case algorithms.QUICK:
+                header.innerText = "QuickSort";
+                break;
+
             default:
                 break;
         }
@@ -124,8 +137,8 @@ async function bubbleSort() {
             console.log(blocks[j].style.backgroundColor);
             blocks[j+1].style.backgroundColor = selectedColour;
 
-            const value1 = Number(blocks[j].childNodes[0].innerHTML);
-            const value2 = Number(blocks[j + 1].childNodes[0].innerHTML);
+            const value1 = getValue(blocks[j]);
+            const value2 = getValue(blocks[j+1]);
 
             if (value1 > value2) {
                 blocks = await swap(blocks, j, j+1);
@@ -162,8 +175,8 @@ async function selectionSort() {
 
             blocks[min].style.backgroundColor = selectedColour;
 
-            const value1 = Number(blocks[j].childNodes[0].innerHTML);
-            const value2 = Number(blocks[min].childNodes[0].innerHTML);
+            const value1 = getValue(blocks[j]);
+            const value2 = getValue(blocks[min]);
             
             if (value1 < value2) {
                 blocks[min].style.backgroundColor = initColour;
@@ -200,12 +213,12 @@ async function insertionSort() {
     for (let i = 1; i < blocks.length; i += 1) {
         /*console.log('\n');
         for (let k=0; k < blocks.length; k++) {
-            console.log(Number(blocks[k].childNodes[0].innerHTML));
+            console.log(getValue(blocks[k]);
         }
         console.log('\n');*/
-        let valueToInsert = Number(blocks[i].childNodes[0].innerHTML);
+        let valueToInsert = getValue(blocks[i]);
         let j=i-1;
-        while (j >= 0 && Number(blocks[j].childNodes[0].innerHTML) > valueToInsert) {
+        while (j >= 0 && getValue(blocks[j]) > valueToInsert) {
             await new Promise(resolve =>
                 setTimeout(() => {
                     resolve();
@@ -234,6 +247,68 @@ async function insertionSort() {
     })
 }
 
+async function quickSort() {
+    async function partition(array, low, high, pivot) {
+        console.log ("pivot = "+ pivot);
+
+        let i = low-1;
+        let j = high;
+        while (true) {
+            while (getValue(array[++i]) < pivot);
+
+            while(j > 0 && getValue(array[--j]) > pivot);
+
+            if (i < array.length) array[i].style.backgroundColor = selectedColour;
+            if (j >= 0) array[j].style.backgroundColor = selectedColour;
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            if (i < array.length) array[i].style.backgroundColor = initColour;
+            if (j >= 0) array[j].style.backgroundColor = initColour;
+
+            if (i >= j) break;
+            
+            else await swap(array, i, j);
+        }
+        array[high].style.backgroundColor = doneColour;
+        await swap(array, i, high);
+        return i;
+    }
+
+    async function quickSortAux(array, low, high) {
+        let pi = null;
+        if (low < high) {
+            let pivot = getValue(array[high]);
+            array[high].style.backgroundColor = pivotColour;
+            pi = await partition(array, low, high, pivot);
+            console.log("pi = "+pi);
+
+            await quickSortAux(array, low, pi-1);
+            await quickSortAux(array, pi+1, high);
+        }
+        else {
+            if (high >=0) array[high].style.backgroundColor = doneColour;
+        }
+    }
+
+    if (delay && typeof delay !== "number") {
+        alert("sort: First argument must be a typeof Number");
+        return;
+    }
+    let htmlElements = document.querySelectorAll(".block");
+    let blocks = new Array();
+    for (let i = 0; i < htmlElements.length; i++) {
+        blocks.push(htmlElements[i]);
+    }
+    
+    await quickSortAux(blocks, 0, blocks.length-1);
+
+    console.log('\n');
+    for (let k=0; k < blocks.length; k++) {
+        console.log(getValue(blocks[k]));
+    }
+    console.log('\n');
+}
+
 function sort() {
     if (!active) {
         active = true;
@@ -252,7 +327,11 @@ function sort() {
                 insertionSort();
                 console.log("Insertion sort");
                 break;
-            
+
+            case algorithms.QUICK:
+                quickSort();
+                console.log("Quicksort");
+                break;            
             default:
                 alert("Algorithms not implemented");
                 break;
