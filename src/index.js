@@ -5,12 +5,19 @@ const algorithms = {
     INSERTION: 3,
     QUICK: 4
 }
+
+const speed = {
+    SLOW: 1,
+    NORMAL: 2,
+    FAST: 3
+}
     
 const canvas = document.querySelector(".data-container");
 
 let sortingAlgo = algorithms.BUBBLE;
 let active = false;
-const delay = 70;
+let delay = 175;
+let qsDelay = 1000;
 const initColour = "#3aafff";
 const selectedColour = "#d849ff";
 const doneColour = "#13CE66";
@@ -74,7 +81,7 @@ function changeAlgorithm(code) {
                 break;
 
             case algorithms.QUICK:
-                header.innerText = "QuickSort";
+                header.innerText = "Quick Sort";
                 break;
 
             default:
@@ -82,6 +89,28 @@ function changeAlgorithm(code) {
         }
     }
     console.log(sortingAlgo);
+}
+
+function changeSpeed(type) {
+    switch (type) {
+        case speed.SLOW:
+            delay = 250;
+            qsDelay = 1500;
+            break;
+    
+        case speed.NORMAL:
+            delay = 175;
+            qsDelay = 1000;
+            break;
+
+        case speed.FAST:
+            delay = 125;
+            qsDelay = 500;
+            break;
+
+        default:
+            break;
+    }
 }
 
 // swap el1 with el2 but only visualy. Does not change the order on the array
@@ -101,7 +130,7 @@ function swapVisual(el1, el2) {
             setTimeout(() => {
                 //canvas.insertBefore(el2, el1);
                 resolve();
-            }, 250);
+            }, delay);
         });
     });
 }
@@ -254,7 +283,7 @@ async function quickSort() {
 
             if (i < array.length) array[i].style.backgroundColor = selectedColour;
             if (j >= 0) array[j].style.backgroundColor = selectedColour;
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, qsDelay));
 
             if (i < array.length) array[i].style.backgroundColor = initColour;
             if (j >= 0) array[j].style.backgroundColor = initColour;
