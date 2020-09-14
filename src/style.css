@@ -1,4 +1,19 @@
-* {
+@media only screen and (max-width: 1020px) {
+    nav {
+        font-size: 24px;
+    }
+    
+    h1 {
+        text-align: center;
+        font-size: 60px!important;
+    }
+
+    button {
+        font-size: 30px;
+    }
+}
+
+*{
     padding: 0;
     margin: 0;
     font-family: sans-serif;

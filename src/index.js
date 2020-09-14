@@ -120,8 +120,9 @@ async function bubbleSort() {
                 }, delay)
             );
 
-            blocks[j].style.backgroundColour = selectedColour;
-            blocks[j+1].style.backgroundColour = selectedColour;
+            blocks[j].style.backgroundColor = selectedColour;
+            console.log(blocks[j].style.backgroundColor);
+            blocks[j+1].style.backgroundColor = selectedColour;
 
             const value1 = Number(blocks[j].childNodes[0].innerHTML);
             const value2 = Number(blocks[j + 1].childNodes[0].innerHTML);
@@ -130,13 +131,13 @@ async function bubbleSort() {
                 blocks = await swap(blocks, j, j+1);
             }
 
-            blocks[j].style.backgroundColour = initColour;
-            blocks[j + 1].style.backgroundColour = initColour;
+            blocks[j].style.backgroundColor = initColour;
+            blocks[j + 1].style.backgroundColor = initColour;
         }
 
-        blocks[blocks.length - i - 1].style.backgroundColour = doneColour;
+        blocks[blocks.length - i - 1].style.backgroundColor = doneColour;
     }
-    blocks[0].style.backgroundColour = doneColour;
+    blocks[0].style.backgroundColor = doneColour;
 }
 
 async function selectionSort() {
@@ -159,29 +160,31 @@ async function selectionSort() {
                 }, delay)
             );
 
-            blocks[j].style.backgroundColour = selectedColour;
-            blocks[min].style.backgroundColour = selectedColour;
+            blocks[min].style.backgroundColor = selectedColour;
 
             const value1 = Number(blocks[j].childNodes[0].innerHTML);
             const value2 = Number(blocks[min].childNodes[0].innerHTML);
             
             if (value1 < value2) {
-                blocks[min].style.backgroundColour = initColour;
+                blocks[min].style.backgroundColor = initColour;
                 min = j;
             } else {
-                blocks[j].style.backgroundColour = initColour;
+                blocks[j].style.backgroundColor = initColour;
             }
 
-            //blocks[j + 1].style.backgroundColour = doneColour;
+            blocks[j].style.backgroundColor = initColour;
         }
+
+        blocks[i].style.backgroundColor = selectedColour;
 
         blocks = await swap(blocks, min, i);
 
-        blocks[i].style.backgroundColour = doneColour;
+        blocks[min].style.backgroundColor = initColour;
+        blocks[i].style.backgroundColor = doneColour;
             
-        //blocks[blocks.length - i - 1].style.backgroundColour = initCoulour;
+        //blocks[blocks.length - i - 1].style.backgroundColor = initCoulour;
     }
-    //blocks[0].style.backgroundColour = doneColour;
+    blocks[blocks.length-1].style.backgroundColor = doneColour;
 }
 
 async function insertionSort() {
@@ -209,22 +212,26 @@ async function insertionSort() {
                 }, delay)
             );
 
-            /*blocks[j].style.backgroundColour = selectedColour;
-            blocks[j + 1].style.backgroundColour = selectedColour;*/
+            blocks[j].style.backgroundColor = selectedColour;
+            blocks[j + 1].style.backgroundColor = selectedColour;
 
             blocks = await swap(blocks, j, j+1);
 
-            blocks[j].style.backgroundColour = doneColour;
-            blocks[j + 1].style.backgroundColour = doneColour;
+
+            blocks[j].style.backgroundColor = initColour;
+            blocks[j + 1].style.backgroundColor = initColour;
 
             j -= 1;
         }
 
-        console.log(j+1);
 
-        //blocks[blocks.length - i - 1].style.backgroundColour = initColour;
+        //blocks[blocks.length - i - 1].style.backgroundColor = initColour;
     }
-    blocks[0].style.backgroundColour = doneColour;
+
+    blocks.forEach((item, index) => {
+        blocks[index].style.transition = "background-color 0.7s";
+        blocks[index].style.backgroundColor = doneColour;
+    })
 }
 
 function sort() {
