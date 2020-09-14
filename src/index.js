@@ -115,6 +115,7 @@ async function swap(array, i, j) {
     return array;
 }
 
+// apply bubble sort algorithm to the bars on the screen
 async function bubbleSort() {
     if (delay && typeof delay !== "number") {
         alert("sort: First argument must be a typeof Number");
@@ -153,6 +154,7 @@ async function bubbleSort() {
     blocks[0].style.backgroundColor = doneColour;
 }
 
+// apply selection sort algorithm to the bars on the screen
 async function selectionSort() {
     if (delay && typeof delay !== "number") {
         alert("sort: First argument must be a typeof Number");
@@ -194,12 +196,11 @@ async function selectionSort() {
 
         blocks[min].style.backgroundColor = initColour;
         blocks[i].style.backgroundColor = doneColour;
-            
-        //blocks[blocks.length - i - 1].style.backgroundColor = initCoulour;
     }
     blocks[blocks.length-1].style.backgroundColor = doneColour;
 }
 
+// apply insertion sort algorithm to the bars on the screen
 async function insertionSort() {
     if (delay && typeof delay !== "number") {
         alert("sort: First argument must be a typeof Number");
@@ -211,11 +212,6 @@ async function insertionSort() {
         blocks.push(htmlElements[i]);
     }
     for (let i = 1; i < blocks.length; i += 1) {
-        /*console.log('\n');
-        for (let k=0; k < blocks.length; k++) {
-            console.log(getValue(blocks[k]);
-        }
-        console.log('\n');*/
         let valueToInsert = getValue(blocks[i]);
         let j=i-1;
         while (j >= 0 && getValue(blocks[j]) > valueToInsert) {
@@ -236,9 +232,6 @@ async function insertionSort() {
 
             j -= 1;
         }
-
-
-        //blocks[blocks.length - i - 1].style.backgroundColor = initColour;
     }
 
     blocks.forEach((item, index) => {
@@ -247,6 +240,7 @@ async function insertionSort() {
     })
 }
 
+// apply quick sort algorithm to the bars on the screen
 async function quickSort() {
     async function partition(array, low, high, pivot) {
         console.log ("pivot = "+ pivot);
@@ -260,7 +254,7 @@ async function quickSort() {
 
             if (i < array.length) array[i].style.backgroundColor = selectedColour;
             if (j >= 0) array[j].style.backgroundColor = selectedColour;
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             if (i < array.length) array[i].style.backgroundColor = initColour;
             if (j >= 0) array[j].style.backgroundColor = initColour;
@@ -309,6 +303,7 @@ async function quickSort() {
     console.log('\n');
 }
 
+// applies the sorting algorithm that the user selected
 function sort() {
     if (!active) {
         active = true;
@@ -339,6 +334,7 @@ function sort() {
     }
 }
 
+// Refresh the canvas and draw a new set of bars
 function reset() {
     generateBlocks();
     active = false;

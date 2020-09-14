@@ -29,7 +29,7 @@ body {
 }
 
 .canvas {
-    margin-top: 5vh;
+    margin: 5vh 0;
 }
 
 h1 {
@@ -91,5 +91,10 @@ button {
     position: absolute;
     top: -24px;
     width: 100%;
+    text-align: center;
+}
+
+.source-link {
+    margin-top: 20px;
     text-align: center;
 }
