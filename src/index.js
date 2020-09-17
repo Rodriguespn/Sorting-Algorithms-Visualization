@@ -3,25 +3,41 @@ const algorithms = {
     BUBBLE: 1,
     SELECTION: 2,
     INSERTION: 3,
-    QUICK: 4
+    QUICK: 4,
+    MERGE: 5
 }
 
-const speed = {
+const speed_modes = {
     SLOW: 1,
     NORMAL: 2,
     FAST: 3
+}
+
+// in miliseconds
+const delay_time = {
+    SLOW: 280,
+    NORMAL: 200,
+    FAST: 160,
+    QS_SLOW: 1500,
+    QS_NORMAL: 1000,
+    QS_FAST: 500
+}
+
+const bar_colours = {
+    initColour: "#3aafff",
+    selectedColour: "#d849ff",
+    selectedColour2: "#ff9e18",
+    doneColour: "#13CE66",
+    pivotColour: "#ff3a4d"
 }
     
 const canvas = document.querySelector(".data-container");
 
 let sortingAlgo = algorithms.BUBBLE;
 let active = false;
-let delay = 175;
-let qsDelay = 1000;
-const initColour = "#3aafff";
-const selectedColour = "#d849ff";
-const doneColour = "#13CE66";
-const pivotColour = "#ff3a4d";
+let delay = delay_time.NORMAL;
+let qsDelay = delay_time.QS_NORMAL;
+
 
 function getValue(htmlElement) {
     return Number(htmlElement.childNodes[0].innerHTML);
@@ -35,7 +51,7 @@ function clearCanvas() {
 }
 
 // generates new blocks on the canvas
-function generateBlocks(num = 30) {
+function generateBlocks() {
     clearCanvas();
 
     num = canvas.clientWidth / 30 - 1;
@@ -84,28 +100,32 @@ function changeAlgorithm(code) {
                 header.innerText = "Quick Sort";
                 break;
 
+            case algorithms.MERGE:
+                header.innerText = "Merge Sort";
+                break;
+
             default:
                 break;
         }
     }
-    console.log(sortingAlgo);
+    console.log("Code="+sortingAlgo);
 }
 
 function changeSpeed(type) {
     switch (type) {
-        case speed.SLOW:
-            delay = 250;
-            qsDelay = 1500;
+        case speed_modes.SLOW:
+            delay = delay_time.SLOW;
+            qsDelay = delay_time.QS_SLOW;
             break;
     
-        case speed.NORMAL:
-            delay = 175;
-            qsDelay = 1000;
+        case speed_modes.NORMAL:
+            delay = delay_time.NORMAL;
+            qsDelay = delay_time.QS_NORMAL;
             break;
 
-        case speed.FAST:
-            delay = 125;
-            qsDelay = 500;
+        case speed_modes.FAST:
+            delay = delay_time.FAST;
+            qsDelay = delay_time.QS_FAST;
             break;
 
         default:
@@ -144,28 +164,29 @@ async function swap(array, i, j) {
     return array;
 }
 
+function htmlElementToArray(name) {
+    let htmlElements = document.querySelectorAll(name);
+    let array = new Array();
+    for (let i = 0; i < htmlElements.length; i++) {
+        array.push(htmlElements[i]);
+    }
+    return array;
+}
+
 // apply bubble sort algorithm to the bars on the screen
 async function bubbleSort() {
     if (delay && typeof delay !== "number") {
         alert("sort: First argument must be a typeof Number");
         return;
     }
-    let htmlElements = document.querySelectorAll(".block");
-    let blocks = new Array();
-    for (let i = 0; i < htmlElements.length; i++) {
-        blocks.push(htmlElements[i]);
-    }
+
+    blocks = htmlElementToArray(".block");
+
     for (let i = 0; i < blocks.length - 1; i += 1) {
         for (let j = 0; j < blocks.length - i - 1; j += 1) {
-            await new Promise(resolve =>
-                setTimeout(() => {
-                    resolve();
-                }, delay)
-            );
 
-            blocks[j].style.backgroundColor = selectedColour;
-            console.log(blocks[j].style.backgroundColor);
-            blocks[j+1].style.backgroundColor = selectedColour;
+            blocks[j].style.backgroundColor = bar_colours.selectedColour2;
+            blocks[j+1].style.backgroundColor = bar_colours.selectedColour;
 
             const value1 = getValue(blocks[j]);
             const value2 = getValue(blocks[j+1]);
@@ -174,13 +195,19 @@ async function bubbleSort() {
                 blocks = await swap(blocks, j, j+1);
             }
 
-            blocks[j].style.backgroundColor = initColour;
-            blocks[j + 1].style.backgroundColor = initColour;
+            await new Promise(resolve =>
+                setTimeout(() => {
+                    resolve();
+                }, delay)
+            );
+
+            blocks[j].style.backgroundColor = bar_colours.initColour;
+            blocks[j + 1].style.backgroundColor = bar_colours.initColour;
         }
 
-        blocks[blocks.length - i - 1].style.backgroundColor = doneColour;
+        blocks[blocks.length - i - 1].style.backgroundColor = bar_colours.doneColour;
     }
-    blocks[0].style.backgroundColor = doneColour;
+    blocks[0].style.backgroundColor = bar_colours.doneColour;
 }
 
 // apply selection sort algorithm to the bars on the screen
@@ -189,44 +216,43 @@ async function selectionSort() {
         alert("sort: First argument must be a typeof Number");
         return;
     }
-    let htmlElements = document.querySelectorAll(".block");
-    let blocks = new Array();
-    for (let i = 0; i < htmlElements.length; i++) {
-        blocks.push(htmlElements[i]);
-    }
+    
+    blocks = htmlElementToArray(".block");
 
     for (let i = 0; i < blocks.length-1; i += 1) {
         min = i;
         for (let j = i+1; j < blocks.length; j += 1) {
+
+            blocks[j].style.backgroundColor = bar_colours.selectedColour;
+            blocks[min].style.backgroundColor = bar_colours.selectedColour2;
+
+            const value1 = getValue(blocks[j]);
+            const value2 = getValue(blocks[min]);
+
             await new Promise(resolve =>
                 setTimeout(() => {
                     resolve();
                 }, delay)
             );
-
-            blocks[min].style.backgroundColor = selectedColour;
-
-            const value1 = getValue(blocks[j]);
-            const value2 = getValue(blocks[min]);
             
             if (value1 < value2) {
-                blocks[min].style.backgroundColor = initColour;
+                blocks[min].style.backgroundColor = bar_colours.initColour;
                 min = j;
             } else {
-                blocks[j].style.backgroundColor = initColour;
+                blocks[j].style.backgroundColor = bar_colours.initColour;
             }
 
-            blocks[j].style.backgroundColor = initColour;
+            blocks[j].style.backgroundColor = bar_colours.initColour;
         }
 
-        blocks[i].style.backgroundColor = selectedColour;
+        blocks[i].style.backgroundColor = bar_colours.selectedColour;
 
         blocks = await swap(blocks, min, i);
 
-        blocks[min].style.backgroundColor = initColour;
-        blocks[i].style.backgroundColor = doneColour;
+        blocks[min].style.backgroundColor = bar_colours.initColour;
+        blocks[i].style.backgroundColor = bar_colours.doneColour;
     }
-    blocks[blocks.length-1].style.backgroundColor = doneColour;
+    blocks[blocks.length-1].style.backgroundColor = bar_colours.doneColour;
 }
 
 // apply insertion sort algorithm to the bars on the screen
@@ -235,29 +261,27 @@ async function insertionSort() {
         alert("sort: First argument must be a typeof Number");
         return;
     }
-    let htmlElements = document.querySelectorAll(".block");
-    let blocks = new Array();
-    for (let i = 0; i < htmlElements.length; i++) {
-        blocks.push(htmlElements[i]);
-    }
+    
+    blocks = htmlElementToArray(".block");
+
     for (let i = 1; i < blocks.length; i += 1) {
         let valueToInsert = getValue(blocks[i]);
         let j=i-1;
         while (j >= 0 && getValue(blocks[j]) > valueToInsert) {
+
+            blocks[j].style.backgroundColor = bar_colours.selectedColour;
+            blocks[j + 1].style.backgroundColor = bar_colours.selectedColour2;
+
+            blocks = await swap(blocks, j, j+1);
+
             await new Promise(resolve =>
                 setTimeout(() => {
                     resolve();
                 }, delay)
             );
 
-            blocks[j].style.backgroundColor = selectedColour;
-            blocks[j + 1].style.backgroundColor = selectedColour;
-
-            blocks = await swap(blocks, j, j+1);
-
-
-            blocks[j].style.backgroundColor = initColour;
-            blocks[j + 1].style.backgroundColor = initColour;
+            blocks[j].style.backgroundColor = bar_colours.initColour;
+            blocks[j + 1].style.backgroundColor = bar_colours.initColour;
 
             j -= 1;
         }
@@ -265,14 +289,13 @@ async function insertionSort() {
 
     blocks.forEach((item, index) => {
         blocks[index].style.transition = "background-color 0.7s";
-        blocks[index].style.backgroundColor = doneColour;
+        blocks[index].style.backgroundColor = bar_colours.doneColour;
     })
 }
 
 // apply quick sort algorithm to the bars on the screen
 async function quickSort() {
     async function partition(array, low, high, pivot) {
-        console.log ("pivot = "+ pivot);
 
         let i = low-1;
         let j = high;
@@ -281,18 +304,18 @@ async function quickSort() {
 
             while(j > 0 && getValue(array[--j]) > pivot);
 
-            if (i < array.length) array[i].style.backgroundColor = selectedColour;
-            if (j >= 0) array[j].style.backgroundColor = selectedColour;
+            if (i < array.length) array[i].style.backgroundColor = bar_colours.selectedColour;
+            if (j >= 0) array[j].style.backgroundColor = bar_colours.selectedColour;
             await new Promise(resolve => setTimeout(resolve, qsDelay));
 
-            if (i < array.length) array[i].style.backgroundColor = initColour;
-            if (j >= 0) array[j].style.backgroundColor = initColour;
+            if (i < array.length) array[i].style.backgroundColor = bar_colours.initColour;
+            if (j >= 0) array[j].style.backgroundColor = bar_colours.initColour;
 
             if (i >= j) break;
             
             else await swap(array, i, j);
         }
-        array[high].style.backgroundColor = doneColour;
+        array[high].style.backgroundColor = bar_colours.doneColour;
         await swap(array, i, high);
         return i;
     }
@@ -301,15 +324,15 @@ async function quickSort() {
         let pi = null;
         if (low < high) {
             let pivot = getValue(array[high]);
-            array[high].style.backgroundColor = pivotColour;
+            array[high].style.backgroundColor = bar_colours.pivotColour;
             pi = await partition(array, low, high, pivot);
-            console.log("pi = "+pi);
+            
 
             await quickSortAux(array, low, pi-1);
             await quickSortAux(array, pi+1, high);
         }
         else {
-            if (high >=0) array[high].style.backgroundColor = doneColour;
+            if (high >= 0) array[high].style.backgroundColor = bar_colours.doneColour;
         }
     }
 
@@ -317,19 +340,63 @@ async function quickSort() {
         alert("sort: First argument must be a typeof Number");
         return;
     }
-    let htmlElements = document.querySelectorAll(".block");
-    let blocks = new Array();
-    for (let i = 0; i < htmlElements.length; i++) {
-        blocks.push(htmlElements[i]);
-    }
+    
+    blocks = htmlElementToArray(".block");
     
     await quickSortAux(blocks, 0, blocks.length-1);
+}
 
-    console.log('\n');
-    for (let k=0; k < blocks.length; k++) {
-        console.log(getValue(blocks[k]));
+// apply merge sort algorithm to the bars on the screen
+async function mergeSort() {
+    async function merge(array, left, middle, right) {
+        let start = middle + 1;
+        if (getValue(array[middle]) <= getValue(array[start])) return;
+
+        while (left <= middle && start <= right) {
+            if (getValue(array[left]) <= getValue(array[start])) left++;
+            else {
+                let index = start;
+                array[index].style.backgroundColor = bar_colours.selectedColour2;
+                while (index != left) {
+                    array[index-1].style.backgroundColor = bar_colours.selectedColour;
+                    await swap(array, index, index-1);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    array[index].style.backgroundColor = bar_colours.initColour;
+                    index--;
+                }
+                array[index].style.backgroundColor = bar_colours.initColour;
+                left++;
+                middle++;
+                start++;
+            }
+        }
     }
-    console.log('\n');
+
+    async function mergeSortAux(array, left, right) {
+        if (left < right) {
+            // Same as (left + right) / 2, but avoids overflow 
+            // for large left and right 
+            let middle = Math.floor(left + (right - left) / 2);
+            
+            await mergeSortAux(array, left, middle);
+            await mergeSortAux(array, middle+1, right);
+            await merge(array, left, middle, right);
+        }
+    }
+
+    if (delay && typeof delay !== "number") {
+        alert("sort: First argument must be a typeof Number");
+        return;
+    }
+    
+    blocks = htmlElementToArray(".block");
+    
+    await mergeSortAux(blocks, 0, blocks.length-1);
+
+    blocks.forEach((item, index) => {
+        blocks[index].style.transition = "background-color 0.7s";
+        blocks[index].style.backgroundColor = bar_colours.doneColour;
+    })
 }
 
 // applies the sorting algorithm that the user selected
@@ -338,26 +405,32 @@ function sort() {
         active = true;
         switch (sortingAlgo) {
             case algorithms.BUBBLE:
-                bubbleSort();
                 console.log("Bubble sort");
+                bubbleSort();
                 break;
         
             case algorithms.SELECTION:
-                selectionSort();
                 console.log("Selection sort");
+                selectionSort();
                 break;
 
             case algorithms.INSERTION:
-                insertionSort();
                 console.log("Insertion sort");
+                insertionSort();
                 break;
 
             case algorithms.QUICK:
-                quickSort();
                 console.log("Quicksort");
-                break;            
+                quickSort();
+                break;         
+                
+            case algorithms.MERGE:
+                console.log("Mergesort");
+                mergeSort();
+            break;
+
             default:
-                alert("Algorithms not implemented");
+                alert("This algorithm not implemented yet.\nPlease try another one.");
                 break;
         }
     }
