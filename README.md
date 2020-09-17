@@ -3,6 +3,8 @@ A single web page with some sorting algorithms step by step animation.
 
 Feel free to contribute to this project.
 
+Webpage available at http://web.tecnico.ulisboa.pt/~ist190531/Sorting-Algorithms-Visualization/
+
 ## Algorithms available
 - Bubble Sort
 - Selection Sort
@@ -10,9 +12,7 @@ Feel free to contribute to this project.
 - Quick Sort
 - In-Place Merge Sort
 
-You can also run the visualization faster or slower, by pressing the buttons bellow the animation canvas.
-
-Webpage available at http://web.tecnico.ulisboa.pt/~ist190531/Sorting-Algorithms-Visualization/
+You can also run the visualization faster or slower, by pressing the buttons bellow the animation canvas
 
 ## Algorithms to implement
 - Heap Sort
