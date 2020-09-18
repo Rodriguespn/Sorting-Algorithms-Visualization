@@ -59,7 +59,7 @@ function generateBlocks() {
         alert("First argument must be a typeof Number");
         return;
     }
-    for (let i = 0; i < num; i += 1) {
+    for (let i = 0; i < num; i++) {
         const value = Math.floor(Math.random() * (canvas.clientHeight *0.95));
 
         const block = document.createElement("div");
@@ -107,6 +107,7 @@ function changeAlgorithm(code) {
             default:
                 break;
         }
+        changeSpeed(speed_modes.NORMAL);
     }
     console.log("Code="+sortingAlgo);
 }
@@ -440,6 +441,7 @@ function sort() {
 function reset() {
     generateBlocks();
     active = false;
+    changeSpeed(speed_modes.NORMAL);
 }
 
 generateBlocks();
