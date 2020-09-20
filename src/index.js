@@ -4,7 +4,8 @@ const algorithms = {
     SELECTION: 2,
     INSERTION: 3,
     QUICK: 4,
-    MERGE: 5
+    MERGE: 5,
+    HEAP: 6
 }
 
 const speed_modes = {
@@ -45,6 +46,7 @@ function getValue(htmlElement) {
 
 // Clears the blocks from the canvas
 function clearCanvas() {
+    active = false;
     while(canvas.firstChild) { 
         canvas.removeChild(canvas.firstChild); 
     } 
@@ -102,6 +104,10 @@ function changeAlgorithm(code) {
 
             case algorithms.MERGE:
                 header.innerText = "Merge Sort";
+                break;
+
+            case algorithms.HEAP:
+                header.innerText = "Heap Sort";
                 break;
 
             default:
@@ -400,6 +406,89 @@ async function mergeSort() {
     })
 }
 
+// apply heap sort algorithm to the bars on the screen
+async function heapSort() {
+    // To heapify subtree rooted at index i. 
+    // n is size of heap 
+    async function heapify(array, n, i) {
+        let largest = i;        // Initialize largest as root 
+        const l = 2 * i + 1;    // left = 2*i + 1 
+        const r = 2 * i + 2;    // right = 2*i + 2 
+    
+        // See if left child of root exists and is 
+        // greater than root 
+        if (l < n && getValue(array[l]) > getValue(array[largest])) { 
+            largest = l;
+        }
+    
+        // See if right child of root exists and is 
+        // greater than root 
+        if (r < n && getValue(array[r]) > getValue(array[largest])) { 
+            largest = r;
+        }
+    
+        // Change root, if needed 
+        if (largest != i) {
+            array[i].style.backgroundColor = bar_colours.selectedColour2;
+            array[largest].style.backgroundColor = bar_colours.selectedColour;
+            await new Promise(resolve =>
+                setTimeout(() => {
+                    resolve();
+                }, delay)
+            );
+            await swap(array, i, largest); // swap
+            array[i].style.backgroundColor = bar_colours.initColour;
+            array[largest].style.backgroundColor = bar_colours.initColour;
+    
+            // Heapify the root. 
+            await heapify(array, n, largest);
+        }
+    }
+
+    // main function to do heap sort 
+    async function heapSortAux(array) { 
+        const len = array.length;
+        // Build heap (rearrange array) 
+        for (let i = Math.floor(len / 2) - 1; i >= 0; i--) { 
+            await heapify(array, len, i); 
+        }
+      
+        // One by one extract an element from heap 
+        for (let i = len-1; i > 0; i--) { 
+            array[0].style.backgroundColor = bar_colours.selectedColour2;
+            array[i].style.backgroundColor = bar_colours.selectedColour;
+            await new Promise(resolve =>
+                setTimeout(() => {
+                    resolve();
+                }, delay)
+            );
+            // Move current root to end 
+            await swap(array, 0, i); 
+            array[i].style.backgroundColor = bar_colours.doneColour;
+            array[0].style.backgroundColor = bar_colours.initColour;
+
+            
+      
+            // call max heapify on the reduced heap 
+            await heapify(array, i, 0); 
+        } 
+    }
+
+    if (delay && typeof delay !== "number") {
+        alert("sort: First argument must be a typeof Number");
+        return;
+    }
+    
+    blocks = htmlElementToArray(".block");
+    
+    await heapSortAux(blocks);
+
+    blocks.forEach((item, index) => {
+        blocks[index].style.transition = "background-color 0.7s";
+        blocks[index].style.backgroundColor = bar_colours.doneColour;
+    })
+}
+
 // applies the sorting algorithm that the user selected
 function sort() {
     if (!active) {
@@ -428,6 +517,11 @@ function sort() {
             case algorithms.MERGE:
                 console.log("Mergesort");
                 mergeSort();
+            break;
+
+            case algorithms.HEAP:
+                console.log("Heapsort");
+                heapSort();
             break;
 
             default:
